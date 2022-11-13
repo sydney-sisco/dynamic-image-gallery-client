@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import logo from './logo.svg';
 import './App.css';
 
@@ -8,27 +8,41 @@ function App() {
 
   const { messages } = useSocket(); // Creates a websocket and manages messaging
 
+  const [images, setImages] = useState([]);
+
+  const generateHTML = (oldImage, newImage) => {
+    const newImageHTML = `<img class="fade-in-image top" src="http://localhost:4000/${newImage}" />`;
+    const oldImageHTML = `<img class="bottom" src="http://localhost:4000/${oldImage}" />`;
+    return `${newImageHTML} ${oldImageHTML}`;
+  };
+
   useEffect(() => {
     console.log("messages", messages);
+    if (messages.length > 1) {
+      const oldImage = messages[messages.length - 2];
+      const newImage = messages[messages.length - 1];
+      const html = generateHTML(oldImage, newImage);
+      setImages(html);
+    }
+
+    if (messages.length === 1) {
+      const html = `<img src="http://localhost:4000/${messages[0]}" />`;
+      setImages(html);
+    }
+
+    if (messages.length === 0) {
+      setImages([]);
+    }
+
   }, [messages]);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header>
+        <h1>Live AI Image Gallery</h1>
       </header>
-      <img src={`http://localhost:4000/${messages[messages.length-1]}`} />
+      {/* <img src={`http://localhost:4000/${messages[messages.length-1]}`} /> */}
+      <div dangerouslySetInnerHTML={{ __html: images }} />
     </div>
   );
 }
