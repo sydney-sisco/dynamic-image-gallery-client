@@ -1,7 +1,17 @@
+import { useEffect } from "react";
 import logo from './logo.svg';
 import './App.css';
 
+import useSocket from "./hooks/useSocket";
+
 function App() {
+
+  const { messages } = useSocket(); // Creates a websocket and manages messaging
+
+  useEffect(() => {
+    console.log("messages", messages);
+  }, [messages]);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +28,7 @@ function App() {
           Learn React
         </a>
       </header>
+      <img src={`http://localhost:4000/${messages[messages.length-1]}`} />
     </div>
   );
 }
