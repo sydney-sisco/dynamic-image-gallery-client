@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 
 const NEW_IMAGE = "newImage"; // Name of the event
-const SOCKET_SERVER_URL = "http://localhost:4000";
+// const SOCKET_SERVER_URL = "http://localhost:4000";
+const SOCKET_SERVER_URL = process.env.REACT_APP_WEBSOCKET_URL;
 
 export default function useSocket() {
   const [messages, setMessages] = useState([]); // Sent and received messages
